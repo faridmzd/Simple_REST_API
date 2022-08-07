@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Simple_REST_API.Business;
 using Simple_REST_API.Domain;
 
 namespace Simple_REST_API.Controllers
@@ -17,26 +18,26 @@ namespace Simple_REST_API.Controllers
             //}
         }
 
-        [HttpGet("note")]
+        [HttpGet(ApiRoutes.Note.GetAll)]
         public IActionResult GetNote()
         {
             return Ok(_notes);
         }
         
-        [HttpGet("note/{id:Guid}")]
+        [HttpGet(ApiRoutes.Note.Get)]
         public IActionResult GetNote(Guid Id)
         {
             return Ok(_notes?.Where(note => note.Id == Id ));
         }
 
-        [HttpPost("note")]
+        [HttpPost(ApiRoutes.Note.Add)]
         public IActionResult AddNote([FromBody] Note note)
         {
             _notes.Add(note);
             return Ok(note);
         }
 
-        [HttpPut("note")]
+        [HttpPut(ApiRoutes.Note.Update)]
         public IActionResult UpdateNote([FromBody] Note note)
         {
             Note? wantedNote = _notes.FirstOrDefault(x => x.Id == note.Id);
@@ -45,7 +46,7 @@ namespace Simple_REST_API.Controllers
             return Ok(wantedNote);
         }
         
-        [HttpDelete("note/{id:Guid}")]
+        [HttpDelete(ApiRoutes.Note.Delete)]
         public IActionResult DeleteNote(Guid Id)
         {
             Note? wantedNote = _notes.FirstOrDefault(x => x.Id == Id);
