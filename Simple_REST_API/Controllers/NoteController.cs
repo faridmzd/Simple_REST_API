@@ -5,7 +5,6 @@ using Simple_REST_API.Domain;
 namespace Simple_REST_API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
     public class NoteController : Controller
     {
         private static List<Note> _notes = new List<Note>();
