@@ -39,25 +39,30 @@ namespace Simple_REST_API.Controllers
         [HttpPost(ApiRoutes.Note.Add)]
         public async Task<IActionResult> AddNote([FromBody] CreateNoteRequest noteToCreate)
         {
-            var note = new Note { Id = Guid.NewGuid(), Name = noteToCreate.Name, Content = noteToCreate.Content };
+            var note = new Note { Id = Guid.NewGuid(), Name = noteToCreate.Name, Content = noteToCreate.Content, 
+                CreatedAt = DateTime.Now, EditedAt = DateTime.Now };
 
             var noteCreated = await _noteService.CreateNoteAsync(note);
 
-            var response = new CreateNoteResponse { Id = noteCreated.Id, Name = noteCreated.Name, Content = noteCreated.Content };
+            var response = new CreateNoteResponse { 
+                Id = noteCreated.Id, Name = noteCreated.Name, Content = noteCreated.Content,
+                CreatedAt = noteCreated.CreatedAt, EditedAt = noteCreated.EditedAt
+            };
 
             return CreatedAtAction(nameof(GetNote), response);
         }
 
         [HttpPut(ApiRoutes.Note.Update)]
-        public async Task<IActionResult> UpdateNote([FromBody] UpdateNoteRequest noteToUpdate)
+        public async Task<IActionResult> UpdateNote([FromRoute] Guid Id, [FromBody] UpdateNoteRequest noteToUpdate)
         {
-            var note = await _noteService.GetNoteAsync(noteToUpdate.Id);
+            var note = await _noteService.GetNoteAsync(Id);
 
             if (note == null) return NotFound();
 
             var noteUpdated = await _noteService.UpdateNoteAsync(note);
 
-            var response = new UpdateNoteResponse { Id = noteUpdated.Id, Name = noteUpdated.Name, Content = noteUpdated.Content };
+            var response = new UpdateNoteResponse { Id = noteUpdated.Id, Name = noteUpdated.Name, Content = noteUpdated.Content, 
+                CreatedAt = noteUpdated.CreatedAt, EditedAt = DateTime.Now };
 
             return Ok(response);
         }
