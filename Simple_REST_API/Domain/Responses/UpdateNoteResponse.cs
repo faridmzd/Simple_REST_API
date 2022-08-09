@@ -1,4 +1,4 @@
-﻿namespace Simple_REST_API.Domain.Response
+﻿namespace Simple_REST_API.Domain.Responses
 {
     public class UpdateNoteResponse
     {
