@@ -1,56 +1,77 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Simple_REST_API.Business;
+using Simple_REST_API.Business.Services;
 using Simple_REST_API.Domain;
+using Simple_REST_API.Domain.Requests;
+using Simple_REST_API.Domain.Responses;
 
 namespace Simple_REST_API.Controllers
 {
     [ApiController]
     public class NoteController : Controller
     {
-        private static List<Note> _notes = new List<Note>();
-
-        public NoteController()
+        private readonly INoteService _noteService;
+        
+        public NoteController(INoteService noteService)
         {
-            //if (_notes is null)
-            //{
-            //_notes = new List<Note>();
-            //}
+            _noteService = noteService;
         }
+        
 
         [HttpGet(ApiRoutes.Note.GetAll)]
-        public IActionResult GetNote()
+        public async Task<IActionResult> GetNote()
         {
-            return Ok(_notes);
+            var notes = await _noteService.GetNotesAsync();
+            
+            return Ok(notes);
         }
         
         [HttpGet(ApiRoutes.Note.Get)]
-        public IActionResult GetNote(Guid Id)
+        public async Task<IActionResult> GetNote(Guid Id)
         {
-            return Ok(_notes?.Where(note => note.Id == Id ));
-        }
-
-        [HttpPost(ApiRoutes.Note.Add)]
-        public IActionResult AddNote([FromBody] Note note)
-        {
-            _notes.Add(note);
+            var note = await _noteService.GetNoteAsync(Id);
+            
+            if (note == null)   return NotFound();
+            
             return Ok(note);
         }
 
-        [HttpPut(ApiRoutes.Note.Update)]
-        public IActionResult UpdateNote([FromBody] Note note)
+        [HttpPost(ApiRoutes.Note.Add)]
+        public async Task<IActionResult> AddNote([FromBody] CreateNoteRequest noteToCreate)
         {
-            Note? wantedNote = _notes.FirstOrDefault(x => x.Id == note.Id);
-            wantedNote = new Note { Id = (Guid)(wantedNote?.Id), Name = note?.Name, Content = note?.Content };
+            var note = new Note { Id = new Guid(), Name = noteToCreate.Name, Content = noteToCreate.Content };
 
-            return Ok(wantedNote);
+            var noteCreated = await _noteService.CreateNoteAsync(note);
+
+            var response = new CreateNoteResponse { Id = noteCreated.Id, Name = noteCreated.Name, Content = noteCreated.Content };
+
+            return CreatedAtAction(nameof(GetNote), response);
+        }
+
+        [HttpPut(ApiRoutes.Note.Update)]
+        public async Task<IActionResult> UpdateNote([FromBody] UpdateNoteRequest noteToUpdate)
+        {
+            var note = await _noteService.GetNoteAsync(noteToUpdate.Id);
+
+            if (note == null) return NotFound();
+
+            var noteUpdated = await _noteService.UpdateNoteAsync(note);
+
+            var response = new UpdateNoteResponse { Id = noteUpdated.Id, Name = noteUpdated.Name, Content = noteUpdated.Content };
+
+            return Ok(response);
         }
         
         [HttpDelete(ApiRoutes.Note.Delete)]
-        public IActionResult DeleteNote(Guid Id)
+        public async Task<IActionResult> DeleteNote(Guid Id)
         {
-            Note? wantedNote = _notes.FirstOrDefault(x => x.Id == Id);
-            _notes.Remove(wantedNote);
-            return Ok();
+            var note = await _noteService.GetNoteAsync(Id);
+
+            if (note == null) return NotFound();
+
+            await _noteService.DeleteNoteAsync(Id);
+
+            return NoContent();
         }
     }
 }
