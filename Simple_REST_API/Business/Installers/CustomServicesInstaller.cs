@@ -1,4 +1,6 @@
-﻿namespace Simple_REST_API.Business.Installers
+﻿using Simple_REST_API.Business.Services;
+
+namespace Simple_REST_API.Business.Installers
 {
     public static class CustomServicesInstaller
     {
@@ -6,6 +8,8 @@
         public static void InstallCustomServices(this IServiceCollection services)
         {
             InstallMvcServices(services);
+
+            services.AddSingleton<INoteService, NoteService>();
         }
 
         private static void InstallMvcServices(IServiceCollection services)
