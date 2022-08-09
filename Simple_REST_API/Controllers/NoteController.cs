@@ -39,7 +39,7 @@ namespace Simple_REST_API.Controllers
         [HttpPost(ApiRoutes.Note.Add)]
         public async Task<IActionResult> AddNote([FromBody] CreateNoteRequest noteToCreate)
         {
-            var note = new Note { Id = new Guid(), Name = noteToCreate.Name, Content = noteToCreate.Content };
+            var note = new Note { Id = Guid.NewGuid(), Name = noteToCreate.Name, Content = noteToCreate.Content };
 
             var noteCreated = await _noteService.CreateNoteAsync(note);
 
