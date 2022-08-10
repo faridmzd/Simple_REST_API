@@ -49,7 +49,7 @@ namespace Simple_REST_API.Controllers
                 CreatedAt = noteCreated.CreatedAt, EditedAt = noteCreated.EditedAt
             };
 
-            return CreatedAtAction(nameof(GetNote), response);
+            return CreatedAtAction(nameof(GetNote), new { Id = response.Id },response);
         }
 
         [HttpPut(ApiRoutes.Note.Update)]
