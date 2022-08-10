@@ -9,7 +9,7 @@ namespace Simple_REST_API.Business.Installers
         {
             InstallMvcServices(services);
 
-            services.AddSingleton<INoteService, NoteService>();
+            services.AddScoped<INoteService, NoteService>();
         }
 
         private static void InstallMvcServices(IServiceCollection services)

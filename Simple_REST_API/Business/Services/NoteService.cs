@@ -1,49 +1,48 @@
-﻿using Simple_REST_API.Domain;
+﻿using MongoDB.Driver;
+using Simple_REST_API.Domain;
 
 namespace Simple_REST_API.Business.Services
 {
     public class NoteService : INoteService
     {
-        private List<Note> notes;
+
+        private IMongoCollection<Note> collection;
 
         public NoteService()
         {
-            notes = new List<Note>();
-        }
-        public async Task<Note> CreateNoteAsync(Note note)
-        {
-            notes.Add(note);
 
-            return await Task.FromResult(note);
+            var settings = MongoClientSettings.FromConnectionString("mongodb+srv://ferid:pfgFSAn7HRgeva5@cluster0.cuxmihl.mongodb.net/?retryWrites=true&w=majority");
+            var client = new MongoClient(settings);
+            var database = client.GetDatabase("NoteApp");
+            collection = database.GetCollection<Note>("notes");
+
+        }
+        public async Task CreateNoteAsync(Note note)
+        {
+            await collection.InsertOneAsync(note);
+
         }
 
         public async Task DeleteNoteAsync(Guid id)
         {
-            await Task.Run(() => { var index = notes.FindIndex(x => x.Id == id); notes.RemoveAt(index);  });
+            await collection.DeleteOneAsync(x => x.Id == id);
         }
 
         public async Task<Note> GetNoteAsync(Guid id)
         {
-            return await Task.Run(() => { return notes.FirstOrDefault(x => x.Id == id); } );
+            var note = (await collection.FindAsync(x => x.Id == id)).FirstOrDefault();
+
+            return note;
         }
         
         public async Task<IEnumerable<Note>> GetNotesAsync()
         {
-            return  await Task.FromResult((IEnumerable<Note>)notes);
+            return (await collection.FindAsync(x => true)).ToList();
         }
 
         public async Task<Note> UpdateNoteAsync(Note note)
         {
-           return await Task.Run( () =>
-            {
-                var noteToUpdate = notes.FirstOrDefault(x => x.Id == note.Id);
-
-                noteToUpdate = note;
-
-                return noteToUpdate;
-            }
-            );
-
+            return await collection.FindOneAndReplaceAsync<Note>(x => x.Id == note.Id, note, new FindOneAndReplaceOptions<Note> { ReturnDocument = ReturnDocument.After });
         }
     }
 }

@@ -42,14 +42,21 @@ namespace Simple_REST_API.Controllers
             var note = new Note { Id = Guid.NewGuid(), Name = noteToCreate.Name, Content = noteToCreate.Content, 
                 CreatedAt = DateTime.Now, EditedAt = DateTime.Now };
 
-            var noteCreated = await _noteService.CreateNoteAsync(note);
+            await _noteService.CreateNoteAsync(note);
 
-            var response = new CreateNoteResponse { 
-                Id = noteCreated.Id, Name = noteCreated.Name, Content = noteCreated.Content,
-                CreatedAt = noteCreated.CreatedAt, EditedAt = noteCreated.EditedAt
+
+            var response = new CreateNoteResponse
+            {
+                Id = note.Id,
+                Name = note.Name,
+                Content = note.Content,
+                CreatedAt = note.CreatedAt,
+                EditedAt = note.EditedAt
             };
 
+
             return CreatedAtAction(nameof(GetNote), new { Id = response.Id },response);
+
         }
 
         [HttpPut(ApiRoutes.Note.Update)]
@@ -59,10 +66,12 @@ namespace Simple_REST_API.Controllers
 
             if (note == null) return NotFound();
 
+            note = new Note { Id = note.Id, Name = noteToUpdate.Name, Content = noteToUpdate.Content, CreatedAt = note.CreatedAt, EditedAt = DateTime.Now };
+
             var noteUpdated = await _noteService.UpdateNoteAsync(note);
 
             var response = new UpdateNoteResponse { Id = noteUpdated.Id, Name = noteUpdated.Name, Content = noteUpdated.Content, 
-                CreatedAt = noteUpdated.CreatedAt, EditedAt = DateTime.Now };
+                CreatedAt = noteUpdated.CreatedAt, EditedAt = noteUpdated.EditedAt };
 
             return Ok(response);
         }

@@ -4,7 +4,7 @@ namespace Simple_REST_API.Business.Services
 {
     public interface INoteService
     {
-        Task<Note> CreateNoteAsync(Note note);
+        Task CreateNoteAsync(Note note);
         
         Task<Note> GetNoteAsync(Guid id);
         
