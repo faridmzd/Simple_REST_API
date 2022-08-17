@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
+using Simple_REST_API.Business.DbOptions;
 using Simple_REST_API.Business.Services;
 
 namespace Simple_REST_API.Business.Installers
@@ -16,6 +17,12 @@ namespace Simple_REST_API.Business.Installers
             services.AddScoped<INoteService, NoteService>();
             
             BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+
+            configuration.AddJsonFile("credentials.json", true, true);
+
+            var mongoDBSettings = new MongoDbOptions();
+
+            configuration.GetSection("databases:MongoDB").Bind(mongoDBSettings);
 
         }
 
