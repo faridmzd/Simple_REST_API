@@ -6,6 +6,7 @@ namespace Simple_REST_API.Domain
 {
     public class Note
     {
+        [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
         public string Name { get; set; } = null!;
