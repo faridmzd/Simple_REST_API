@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Driver;
 using Simple_REST_API.Business.DbOptions;
 using Simple_REST_API.Business.Services;
 
@@ -24,6 +25,8 @@ namespace Simple_REST_API.Business.Installers
 
             configuration.GetSection("databases:MongoDB").Bind(mongoDBSettings);
 
+            services.AddSingleton<IMongoDatabase>(m => new MongoClient(mongoDBSettings.API_KEY).GetDatabase(mongoDBSettings.dbName)
+            
         }
 
         private static void InstallMvcServices(IServiceCollection services)

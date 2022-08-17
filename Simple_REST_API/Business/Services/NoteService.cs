@@ -5,17 +5,13 @@ namespace Simple_REST_API.Business.Services
 {
     public class NoteService : INoteService
     {
-
+        private readonly IMongoDatabase _database;
         private IMongoCollection<Note> collection;
 
-        public NoteService()
+        public NoteService(IMongoDatabase database)
         {
-
-            var settings = MongoClientSettings.FromConnectionString("mongodb+srv://ferid:pfgFSAn7HRgeva5@cluster0.cuxmihl.mongodb.net/?retryWrites=true&w=majority");
-            var client = new MongoClient(settings);
-            var database = client.GetDatabase("NoteApp");
+            _database = database;
             collection = database.GetCollection<Note>("notes");
-
         }
         public async Task CreateNoteAsync(Note note)
         {
