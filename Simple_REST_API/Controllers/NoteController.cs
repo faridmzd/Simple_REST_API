@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using Simple_REST_API.Business;
 using Simple_REST_API.Business.Services;
 using Simple_REST_API.Domain;
@@ -27,7 +28,7 @@ namespace Simple_REST_API.Controllers
         }
         
         [HttpGet(ApiRoutes.Note.Get)]
-        public async Task<IActionResult> GetNote(Guid Id)
+        public async Task<IActionResult> GetNote(string Id)
         {
             var note = await _noteService.GetNoteAsync(Id);
             
@@ -61,7 +62,7 @@ namespace Simple_REST_API.Controllers
         }
 
         [HttpPut(ApiRoutes.Note.Update)]
-        public async Task<IActionResult> UpdateNote([FromRoute] Guid Id, [FromBody] UpdateNoteRequest noteToUpdate)
+        public async Task<IActionResult> UpdateNote([FromRoute] string Id, [FromBody] UpdateNoteRequest noteToUpdate)
         {
             var note = await _noteService.GetNoteAsync(Id);
 
@@ -78,7 +79,7 @@ namespace Simple_REST_API.Controllers
         }
         
         [HttpDelete(ApiRoutes.Note.Delete)]
-        public async Task<IActionResult> DeleteNote(Guid Id)
+        public async Task<IActionResult> DeleteNote(string Id)
         {
             var note = await _noteService.GetNoteAsync(Id);
 

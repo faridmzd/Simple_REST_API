@@ -19,12 +19,12 @@ namespace Simple_REST_API.Business.Services
 
         }
 
-        public async Task DeleteNoteAsync(Guid id)
+        public async Task DeleteNoteAsync(string id)
         {
             await collection.DeleteOneAsync(x => x.Id == id);
         }
 
-        public async Task<Note> GetNoteAsync(Guid id)
+        public async Task<Note> GetNoteAsync(string id)
         {
             var note = (await collection.FindAsync(x => x.Id == id)).FirstOrDefault();
 

@@ -2,8 +2,8 @@
 {
     public class CreateNoteRequest
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
         
-        public string Content { get; set; }
+        public string? Content { get; set; }
     }
 }

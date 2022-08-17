@@ -16,8 +16,6 @@ namespace Simple_REST_API.Business.Installers
             InstallMvcServices(services);
             
             services.AddScoped<INoteService, NoteService>();
-            
-            BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
             configuration.AddJsonFile("credentials.json", true, true);
 
