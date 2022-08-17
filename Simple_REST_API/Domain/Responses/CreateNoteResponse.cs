@@ -2,11 +2,11 @@
 {
     public class CreateNoteResponse
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = null!;
 
-        public string Name { get; set; } 
+        public string? Name { get; set; } 
         
-        public string Content { get; set; }
+        public string? Content { get; set; }
 
         public DateTime EditedAt { get; set; }
 
