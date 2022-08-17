@@ -25,7 +25,7 @@ namespace Simple_REST_API.Business.Installers
 
             configuration.GetSection("databases:MongoDB").Bind(mongoDBSettings);
 
-            services.AddSingleton<IMongoDatabase>(m => new MongoClient(mongoDBSettings.API_KEY).GetDatabase(mongoDBSettings.dbName)
+            services.AddSingleton<IMongoDatabase>(m => new MongoClient(mongoDBSettings.API_KEY).GetDatabase(mongoDBSettings.dbName));
             
         }
 
