@@ -22,9 +22,11 @@ namespace Simple_REST_API.Controllers
         [HttpGet(ApiRoutes.Note.GetAll)]
         public async Task<IActionResult> GetNote()
         {
-            var notes = await _noteService.GetNotesAsync();
-            
-            return Ok(notes);
+            //var notes = await _noteService.GetNotesAsync();
+
+            //return Ok(notes);
+
+            throw new Exception();
         }
         
         [HttpGet(ApiRoutes.Note.Get)]
